@@ -10,6 +10,7 @@ import Pastoral from './components/Pastoral/Pastoral';
 import Local from './components/Local/Local';
 import TipoAtividade from './components/TipoAtividade/TipoAtividade'
 import Aluguel from './components/Aluguel/Aluguel';
+import Evento from './components/Evento/Evento';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/aluguel" element={<Aluguel />} />
+          <Route path="/evento" element={<Evento />} />
           <Route path="/local" element={<Local />} />
           <Route path="/sala" element={<Sala />} />
           <Route path='/paroquiano' element={<Paroquiano></Paroquiano>}></Route>

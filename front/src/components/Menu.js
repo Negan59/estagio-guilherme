@@ -28,6 +28,7 @@ class MyMenu extends React.Component {
           </label>
           <div className="submenu">
             <a href="/aluguel" className="submenu-item">Aluguel</a>
+            <a href="/evento" className="submenu-item">Evento</a>
             <a href="/local" className="submenu-item">Local</a>
             <a href="/paroquiano" className="submenu-item">Paroquianos</a>
             <a href="/pastoral" className="submenu-item">Pastorais</a>
