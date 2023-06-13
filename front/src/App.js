@@ -4,8 +4,12 @@ import MyMenu from './components/Menu';
 import './styles/app.css';
 import Header from './components/Header';
 import Home from './components/Home';
-import Sala from './components/Sala';
-import Paroquiano from './components/Paroquiano';
+import Sala from './components/Sala/Sala';
+import Paroquiano from './components/Paroquiano/Paroquiano';
+import Pastoral from './components/Pastoral/Pastoral';
+import Local from './components/Local/Local';
+import TipoAtividade from './components/TipoAtividade/TipoAtividade'
+import Aluguel from './components/Aluguel/Aluguel';
 
 function App() {
   return (
@@ -15,8 +19,12 @@ function App() {
         <Header></Header>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/aluguel" element={<Aluguel />} />
+          <Route path="/local" element={<Local />} />
           <Route path="/sala" element={<Sala />} />
           <Route path='/paroquiano' element={<Paroquiano></Paroquiano>}></Route>
+          <Route path='/pastoral' element={<Pastoral></Pastoral>}></Route>
+          <Route path='/tipoatividade' element={<TipoAtividade></TipoAtividade>}></Route>
         </Routes>
       </div>
     </Router>

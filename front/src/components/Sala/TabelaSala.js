@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import '../styles/tabela.css';
+import '../../styles/tabela.css';
 import ModalSala from './ModalSala';
 
 const TabelaSalas = () => {

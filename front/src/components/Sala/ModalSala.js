@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import '../styles/formulario.css';
+import '../../styles/formulario.css';
 
 const ModalSala = ({ sala, onSubmit, onClose }) => {
   const [id, setId] = useState('');

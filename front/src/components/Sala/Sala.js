@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TabelaSala from './TabelaSala';
 import ModalSala from './ModalSala';
-import '../styles/formulario.css'
+import '../../styles/formulario.css'
 
 const Sala = () => {
     const [showModal, setShowModal] = useState(false);

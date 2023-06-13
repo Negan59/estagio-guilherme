@@ -20,14 +20,6 @@ class MyMenu extends React.Component {
           <FontAwesomeIcon icon={faHome} className="menu-icon" />
           Home
         </a>
-        <a id="about" className="menu-item" href="/about">
-          <FontAwesomeIcon icon={faInfoCircle} className="menu-icon" />
-          About
-        </a>
-        <a id="contact" className="menu-item" href="/contact">
-          <FontAwesomeIcon icon={faEnvelope} className="menu-icon" />
-          Contact
-        </a>
         <div className="menu-item--submenu">
           <input type="checkbox" className="submenu-checkbox" id="cadastros-checkbox" />
           <label htmlFor="cadastros-checkbox" className="menu-item">
@@ -35,9 +27,13 @@ class MyMenu extends React.Component {
             Cadastros
           </label>
           <div className="submenu">
+            <a href="/aluguel" className="submenu-item">Aluguel</a>
+            <a href="/local" className="submenu-item">Local</a>
             <a href="/paroquiano" className="submenu-item">Paroquianos</a>
-            <a href="/pastorais" className="submenu-item">Pastorais</a>
+            <a href="/pastoral" className="submenu-item">Pastorais</a>
             <a href="/sala" className="submenu-item">Salas</a>
+            <a href="/tipoatividade" className="submenu-item">Tipo Atividade</a>
+            
           </div>
         </div>
       </Menu>

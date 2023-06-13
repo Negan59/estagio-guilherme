@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import TabelaParoquiano from './TabelaParoquiano';
-import ModalParoquiano from './ModalParoquiano';
-import '../styles/formulario.css';
+import TabelaTipoAtividade from './TabelaTipoAtividade';
+import ModalTipoAtividade from './ModalTipoAtividade';
+import '../../styles/formulario.css';
 
-const Paroquiano = () => {
+const TipoAtividade = () => {
   const [showModal, setShowModal] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
 
@@ -20,15 +20,15 @@ const Paroquiano = () => {
   return (
     <div className="container">
       <button className="botao" onClick={handleModalToggle}>
-        Adicionar Paroquiano
+        Adicionar Tipo de Atividade
       </button>
-      {showModal && <ModalParoquiano onClose={handleModalToggle} />}
+      {showModal && <ModalTipoAtividade onClose={handleModalToggle} />}
       <div className="tabela-container">
-        <h2>Paroquianos cadastrados</h2>
-        <TabelaParoquiano key={reloadKey} />
+        <h2>Tipos de Atividade cadastrados</h2>
+        <TabelaTipoAtividade key={reloadKey} />
       </div>
     </div>
   );
 };
 
-export default Paroquiano;
+export default TipoAtividade;
