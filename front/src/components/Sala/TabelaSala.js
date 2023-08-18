@@ -22,9 +22,10 @@ const TabelaSalas = () => {
 
   const handleAlterarSubmit = (dadosSala) => {
     // Fechar o modal
-    fetchSalas()
+    fetchSalas();
     setShowModal(false);
   };
+
   const fetchSalas = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/sala');
@@ -33,30 +34,32 @@ const TabelaSalas = () => {
       console.error('Erro ao buscar os dados das salas:', error);
       // Tratar o erro de acordo com as necessidades do seu aplicativo
     }
-  }
+  };
 
   const deletaSala = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/sala/${id}`);
-      setErro({ mensagem: 'Sala deletada com sucesso.', sucesso: true });
-      fetchSalas();
-    } catch (error) {
-      setErro({ mensagem: 'Erro ao deletar a sala. Por favor, tente novamente.', sucesso: false });
-      // Tratar o erro de acordo com as necessidades do seu aplicativo
+    const userConfirmed = window.confirm("Tem certeza que deseja excluir essa sala?");
+    
+    if (userConfirmed) {
+      try {
+        await axios.delete(`http://localhost:8080/api/sala/${id}`);
+        setErro({ mensagem: 'Sala deletada com sucesso.', sucesso: true });
+        fetchSalas();
+      } catch (error) {
+        setErro({ mensagem: 'Erro ao deletar a sala. Por favor, tente novamente.', sucesso: false });
+        // Tratar o erro de acordo com as necessidades do seu aplicativo
+      }
     }
   };
+
   useEffect(() => {
     // Função para buscar os dados das salas
-    
-
-    // Chamar a função de busca das salas
     fetchSalas();
   }, []);
 
   return (
     <>
       {erro && <Erro mensagem={erro.mensagem} sucesso={erro.sucesso} />}
-      <br></br>
+      <br />
       <table>
         <thead>
           <tr>
@@ -77,7 +80,7 @@ const TabelaSalas = () => {
                 </button>
               </td>
               <td>
-                <button className="btn-excluir" onClick={()=>deletaSala(sala.id)}>
+                <button className="btn-excluir" onClick={() => deletaSala(sala.id)}>
                   <FiTrash2 size={20} color="#FF0000" />
                 </button>
               </td>

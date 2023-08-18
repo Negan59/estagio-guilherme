@@ -10,23 +10,31 @@ import com.sgpd.model.SingletonConexao;
 
 public class DAOParoquiano {
     public boolean salvar(Paroquiano u) {
-        System.out.println("chega aqui?");
-        String sql = "insert into Pessoa (nome, foto, telefone,email) values ('$1','$2','$3','$4')";
-        sql = sql.replace("$1", u.getNome());
-        sql = sql.replace("$2", u.getFoto());
-        sql = sql.replace("$3", u.getTelefone());
-        sql = sql.replace("$4", u.getEmail());
-        SingletonConexao con = SingletonConexao.getConexao();
-        boolean flag = con.manipular(sql);
-        if(flag){
-            Paroquiano p = buscarEmail(u.getEmail());
-            sql = "insert into paroquiano (senha,Pessoa_idPessoa) values ('$1',$2)";
-            sql = sql.replace("$1", u.getSenha());
-            sql = sql.replace("$2", ""+p.getId());
-            con = SingletonConexao.getConexao();
-            flag = con.manipular(sql);
+        try {
+            System.out.println("chega aqui?");
+            String sql = "insert into Pessoa (nome, foto, telefone, email) values ('$1', '$2', '$3', '$4')";
+            sql = sql.replace("$1", u.getNome());
+            sql = sql.replace("$2", u.getFoto());
+            sql = sql.replace("$3", u.getTelefone());
+            sql = sql.replace("$4", u.getEmail());
+            SingletonConexao con = SingletonConexao.getConexao();
+            boolean flag = con.manipular(sql);
+            
+            if (flag) {
+                Paroquiano p = buscarEmail(u.getEmail());
+                sql = "insert into paroquiano (senha, Pessoa_idPessoa) values ('$1', $2)";
+                sql = sql.replace("$1", u.getSenha());
+                sql = sql.replace("$2", "" + p.getId());
+                con = SingletonConexao.getConexao();
+                flag = con.manipular(sql);
+            }
+            
+            return flag;
+        } catch (Exception e) {
+            // Aqui você pode tratar a exceção capturada
+            System.out.println("Erro ao salvar no banco de dados: " + e.getMessage());
+            return false;
         }
-        return flag;
     }
 
     public Paroquiano buscarEmail(String email){
@@ -74,12 +82,9 @@ public class DAOParoquiano {
 
     }
 
-    public ArrayList<Paroquiano> buscarTodos(String filtro) {
+    public ArrayList<Paroquiano> buscarTodos() {
         ArrayList<Paroquiano> Lista = new ArrayList<>();
         String sql = "SELECT * FROM pessoa PE inner join paroquiano PA where PE.idPessoa = PA.Pessoa_idPessoa;";
-        if (!filtro.isEmpty()) {
-            sql = "SELECT * FROM pessoa PE inner join paroquiano PA where PE.idPessoa = PA.Pessoa_idPessoa and upper(nome) LIKE " + "'%" + filtro.toUpperCase() + "%'";
-        }
         SingletonConexao con = SingletonConexao.getConexao();
         ResultSet rs = con.consultar(sql);
         try {

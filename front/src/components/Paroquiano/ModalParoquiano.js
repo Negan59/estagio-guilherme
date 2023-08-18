@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
 
 import '../../styles/formulario.css';
 
@@ -10,6 +12,8 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
   const [telefone, setTelefone] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [telefoneErro, setTelefoneErro] = useState(false);
   const [erro, setErro] = useState('');
 
   useEffect(() => {
@@ -19,40 +23,48 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
       setFoto(paroquiano.foto);
       setTelefone(paroquiano.telefone);
       setEmail(paroquiano.email);
-      setSenha(paroquiano.senha);
     }
   }, [paroquiano]);
-
-  const Erro = ({ mensagem, sucesso }) => {
-    const estilo = sucesso ? 'mensagem-sucesso' : 'mensagem-fracasso';
-    return <div className={estilo}>{mensagem}</div>;
-  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     if (nome === '') {
-      setErro({ mensagem: 'Campo obrigatório: Nome', sucesso: false });
+      setErro('Campo obrigatório: Nome');
       return;
     }
 
     if (email === '') {
-      setErro({ mensagem: 'Campo obrigatório: Email', sucesso: false });
+      setErro('Campo obrigatório: Email');
       return;
     }
 
-    let data = {};
+    if (!validateTelefone(telefone)) {
+      setTelefoneErro(true);
+      return;
+    }
+
+    if (senha === '' || senha.length < 6) {
+      setErro('Senha inválida (mínimo 6 caracteres)');
+      return;
+    }
+
+    if (senha !== confirmarSenha) {
+      setErro('As senhas não coincidem');
+      return;
+    }
+
+    let data = {
+      nome: nome,
+      foto: foto,
+      telefone: telefone,
+      email: email,
+      senha: senha,
+    };
 
     if (id) {
-      data = {
-        id: id,
-        nome: nome,
-        foto: foto,
-        telefone: telefone,
-        email: email,
-        senha: senha,
-      };
-      // Atualização (Editar)
+      data.id = id;
+
       axios
         .put(`http://localhost:8080/api/paroquiano`, data)
         .then((response) => {
@@ -69,17 +81,9 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
         })
         .catch((error) => {
           console.error('Erro ao atualizar os dados:', error);
-          setErro({ mensagem: 'Erro ao atualizar o paroquiano. Por favor, tente novamente.', sucesso: false });
+          setErro('Erro ao atualizar o paroquiano. Por favor, tente novamente.');
         });
     } else {
-      data = {
-        nome: nome,
-        foto: foto,
-        telefone: telefone,
-        email: email,
-        senha: senha,
-      };
-      // Inserção (Salvar)
       axios
         .post('http://localhost:8080/api/paroquiano', data)
         .then((response) => {
@@ -94,18 +98,25 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
             setErro('');
             onClose();
           } else {
-            setErro({ mensagem: 'Erro ao adicionar o paroquiano. Por favor, tente novamente.', sucesso: false });
+            setErro('Erro ao adicionar o paroquiano. Por favor, tente novamente.');
           }
         })
         .catch((error) => {
-          console.error('Erro ao salvar os dados:', error);
-          setErro({ mensagem: 'Erro ao adicionar o paroquiano. Por favor, tente novamente.', sucesso: false });
+          console.error(error);
+          setErro('Erro ao adicionar o paroquiano. Por favor, tente novamente.');
         });
     }
   };
 
+  const validateTelefone = (value) => {
+    const telefoneDigits = value.replace(/\D/g, ''); // Remover caracteres não numéricos
+    const telefoneLength = telefoneDigits.length;
+
+    // No Brasil, os números de telefone fixo têm 10 dígitos e os celulares têm 11 dígitos
+    return telefoneLength === 12 || telefoneLength === 13;
+  };
+
   const handleModalContentClick = (event) => {
-    // Impede a propagação do evento de clique para o contêiner do modal
     event.stopPropagation();
   };
 
@@ -118,7 +129,7 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
     <div className="modal" onClick={handleModalClose}>
       <div className="modal-content" onClick={handleModalContentClick}>
         <h2>{id ? 'Editar Paroquiano' : 'Inserir Paroquiano'}</h2>
-        {erro && <Erro mensagem={erro.mensagem} sucesso={erro.sucesso} />}
+        {erro && <div className="mensagem-fracasso">{erro}</div>}
         <form onSubmit={handleSubmit} className="paroquiano-form">
           <div className="form-group">
             <label htmlFor="id">ID:</label>
@@ -133,8 +144,17 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
             <input type="text" id="foto" value={foto} onChange={(e) => setFoto(e.target.value)} required />
           </div>
           <div className="form-group">
-            <label htmlFor="telefone">Telefone:{' '}{telefone === '' && <span className="campo-obrigatorio">* Obrigatório</span>}</label>
-            <input type="text" id="telefone" value={telefone} onChange={(e) => setTelefone(e.target.value)} required />
+            <label htmlFor="telefone">Telefone:{' '}
+              <PhoneInput
+                defaultCountry="BR"
+                placeholder="Insira o número de telefone"
+                value={telefone}
+                onChange={setTelefone}
+                required
+              />
+              {telefoneErro && <span className="erro">Telefone inválido</span>}
+              {telefone === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
+            </label>
           </div>
           <div className="form-group">
             <label htmlFor="email">Email:{' '}{email === '' && <span className="campo-obrigatorio">* Obrigatório</span>}</label>
@@ -143,6 +163,10 @@ const ModalParoquiano = ({ paroquiano, onSubmit, onClose }) => {
           <div className="form-group">
             <label htmlFor="senha">Senha:{' '}{senha === '' && <span className="campo-obrigatorio">* Obrigatório</span>}</label>
             <input type="password" id="senha" value={senha} onChange={(e) => setSenha(e.target.value)} required />
+          </div>
+          <div className="form-group">
+            <label htmlFor="confirmarSenha">Confirmar Senha:{' '}{confirmarSenha === '' && <span className="campo-obrigatorio">* Obrigatório</span>}</label>
+            <input type="password" id="confirmarSenha" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required />
           </div>
           <div className="modal-buttons">
             <button type="submit" className="btn-salvar" id="btn-salvar">{id ? 'Atualizar' : 'Salvar'}</button>

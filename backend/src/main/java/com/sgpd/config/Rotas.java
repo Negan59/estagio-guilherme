@@ -41,8 +41,8 @@ public class Rotas {
     }
 
     @GetMapping("/paroquiano")
-    public ResponseEntity<Object> buscarTodosParoquiano(@RequestParam(value = "filtro") String filtro) {
-        return new ResponseEntity<>(new ParoquianoController().buscarTodos(filtro), HttpStatus.OK);
+    public ResponseEntity<Object> buscarTodosParoquiano() {
+        return new ResponseEntity<>(new ParoquianoController().buscarTodos(), HttpStatus.OK);
     }
 
     // sala

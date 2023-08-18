@@ -55,9 +55,9 @@ public class Paroquiano extends Pessoa {
         return false;
     }
 
-    public ArrayList<Paroquiano> buscarTodos(String filtro) {
+    public ArrayList<Paroquiano> buscarTodos() {
         DAOParoquiano dao = new DAOParoquiano();
-        return dao.buscarTodos(filtro);
+        return dao.buscarTodos();
     }
 
     @Override

@@ -54,8 +54,8 @@ public class ParoquianoController {
         }
     }
 
-    public ArrayList<Paroquiano> buscarTodos(String filtro){
-        return new Paroquiano().buscarTodos(filtro);
+    public ArrayList<Paroquiano> buscarTodos(){
+        return new Paroquiano().buscarTodos();
     }
 
     public Paroquiano buscarUm(int id){
