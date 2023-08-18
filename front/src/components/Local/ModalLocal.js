@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import InputMask from 'react-input-mask';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
 
 import '../../styles/formulario.css';
 
@@ -8,8 +11,10 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
   const [nome, setNome] = useState('');
   const [endereco, setEndereco] = useState('');
   const [telefone, setTelefone] = useState('');
-  const [bairro, setBairro] = useState('');
   const [cep, setCep] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [telefoneErro, setTelefoneErro] = useState(false);
+  const [cepErro, setCepErro] = useState(false);
   const [erro, setErro] = useState('');
 
   useEffect(() => {
@@ -23,104 +28,69 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
     }
   }, [local]);
 
-  const Erro = ({ mensagem, sucesso }) => {
-    const estilo = sucesso ? 'mensagem-sucesso' : 'mensagem-fracasso';
-    return <div className={estilo}>{mensagem}</div>;
+  const validateTelefone = (value) => {
+    const telefoneDigits = value.replace(/\D/g, ''); // Remover caracteres não numéricos
+    const telefoneLength = telefoneDigits.length;
+
+    // No Brasil, os números de telefone fixo têm 10 dígitos e os celulares têm 11 dígitos
+    return telefoneLength === 12 || telefoneLength === 13;
   };
 
-  const handleSubmit = (event) => {
+  const validateCep = (value) => {
+    const cepRegex = /^\d{5}-\d{3}$/;
+    return cepRegex.test(value);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (nome === '') {
-      setErro({ mensagem: 'Campo obrigatório: Nome', sucesso: false });
+    setErro('');
+
+    if (!validateTelefone(telefone)) {
+      setTelefoneErro(true);
       return;
     }
 
-    if (endereco === '') {
-      setErro({ mensagem: 'Campo obrigatório: Endereço', sucesso: false });
+    if (!validateCep(cep)) {
+      setCepErro(true);
       return;
     }
 
-    if (telefone === '') {
-      setErro({ mensagem: 'Campo obrigatório: Telefone', sucesso: false });
-      return;
-    }
+    let data = {
+      nome: nome,
+      endereco: endereco,
+      telefone: telefone,
+      bairro: bairro,
+      cep: cep,
+    };
 
-    if (bairro === '') {
-      setErro({ mensagem: 'Campo obrigatório: Bairro', sucesso: false });
-      return;
-    }
+    try {
+      if (id) {
+        data.id = id;
+        await axios.put(`http://localhost:8080/api/local`, data);
+      } else {
+        await axios.post('http://localhost:8080/api/local', data);
+      }
 
-    if (cep === '') {
-      setErro({ mensagem: 'Campo obrigatório: CEP', sucesso: false });
-      return;
-    }
-
-    let data = {};
-
-    if (id) {
-      data = {
-        id: id,
-        nome: nome,
-        endereco: endereco,
-        telefone: telefone,
-        bairro: bairro,
-        cep: cep,
-      };
-      // Atualização (Editar)
-      axios
-        .put(`http://localhost:8080/api/local`, data)
-        .then((response) => {
-          console.log('Dados atualizados com sucesso:', response.data);
-          onSubmit(response.data);
-          setId('');
-          setNome('');
-          setEndereco('');
-          setTelefone('');
-          setBairro('');
-          setCep('');
-          setErro('');
-          onClose();
-        })
-        .catch((error) => {
-          console.error('Erro ao atualizar os dados:', error);
-          setErro({ mensagem: 'Erro ao atualizar o local. Por favor, tente novamente.', sucesso: false });
-        });
-    } else {
-      data = {
-        nome: nome,
-        endereco: endereco,
-        telefone: telefone,
-        bairro: bairro,
-        cep: cep,
-      };
-      // Inserção (Salvar)
-      axios
-        .post('http://localhost:8080/api/local', data)
-        .then((response) => {
-          console.log(response.data, response.data.status);
-          if (response.data.status === 200) {
-            setId('');
-            setNome('');
-            setEndereco('');
-            setTelefone('');
-            setBairro('');
-            setCep('');
-            setErro('');
-            onClose();
-          } else {
-            setErro({ mensagem: 'Erro ao adicionar o local. Por favor, tente novamente.', sucesso: false });
-          }
-        })
-        .catch((error) => {
-          console.error('Erro ao salvar os dados:', error);
-          setErro({ mensagem: 'Erro ao adicionar o local. Por favor, tente novamente.', sucesso: false });
-        });
+      console.log('Dados salvos com sucesso');
+      if (onSubmit) {
+        onSubmit(data);
+      }
+      setId('');
+      setNome('');
+      setEndereco('');
+      setTelefone('');
+      setBairro('');
+      setCep('');
+      setErro('');
+      onClose();
+    } catch (error) {
+      console.error('Erro ao salvar os dados:', error);
+      setErro('Erro ao salvar o local. Por favor, tente novamente.');
     }
   };
 
   const handleModalContentClick = (event) => {
-    // Impede a propagação do evento de clique para o contêiner do modal
     event.stopPropagation();
   };
 
@@ -133,7 +103,7 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
     <div className="modal" onClick={handleModalClose}>
       <div className="modal-content" onClick={handleModalContentClick}>
         <h2>{id ? 'Editar Local' : 'Inserir Local'}</h2>
-        {erro && <Erro mensagem={erro.mensagem} sucesso={erro.sucesso} />}
+        {erro && <div className="mensagem-fracasso">{erro}</div>}
         <form onSubmit={handleSubmit} className="local-form">
           <div className="form-group">
             <label htmlFor="id">ID:</label>
@@ -165,15 +135,16 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
           </div>
           <div className="form-group">
             <label htmlFor="telefone">Telefone:{' '}
+              <PhoneInput
+                defaultCountry="BR"
+                placeholder="Insira o número de telefone"
+                value={telefone}
+                onChange={setTelefone}
+                required
+              />
+              {telefoneErro && <span className="erro">Telefone inválido</span>}
               {telefone === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
             </label>
-            <input
-              type="text"
-              id="telefone"
-              value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
-              required
-            />
           </div>
           <div className="form-group">
             <label htmlFor="bairro">Bairro:{' '}
@@ -189,15 +160,16 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
           </div>
           <div className="form-group">
             <label htmlFor="cep">CEP:{' '}
+              <InputMask
+                mask="99999-999"
+                placeholder="12345-678"
+                value={cep}
+                onChange={(e) => setCep(e.target.value)}
+                required
+              />
+              {cepErro && <span className="erro">CEP inválido</span>}
               {cep === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
             </label>
-            <input
-              type="text"
-              id="cep"
-              value={cep}
-              onChange={(e) => setCep(e.target.value)}
-              required
-            />
           </div>
           <div className="modal-buttons">
             <button type="submit" className="btn-salvar" id="btn-salvar">

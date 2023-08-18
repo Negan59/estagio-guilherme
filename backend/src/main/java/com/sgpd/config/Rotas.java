@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.sgpd.control.AgendaController;
+import com.sgpd.control.AtividadeController;
 import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
 import com.sgpd.model.Erro;
+import com.sgpd.model.Local;
 import com.sgpd.model.Paroquiano;
 import com.sgpd.model.Pastoral;
 import com.sgpd.model.Sala;
@@ -103,5 +105,31 @@ public class Rotas {
     @GetMapping("/pastoral/inativos")
     public ResponseEntity<Object> buscarTodosPastoralInativos() {
         return new ResponseEntity<>(new PastoralController().buscarInativas(), HttpStatus.OK);
+    }
+
+    // local
+    @PostMapping("/local")
+    public ResponseEntity<Erro> inserirLocal(@RequestBody Local local) {
+        return new ResponseEntity<>(new AtividadeController().salvarLocal(local), HttpStatus.OK);
+    }
+
+    @PutMapping("/local")
+    public ResponseEntity<Erro> alterarLocal(@RequestBody Local local) {
+        return new ResponseEntity<>(new AtividadeController().alterarLocal(local), HttpStatus.OK);
+    }
+
+    @GetMapping("/local/{id}")
+    public ResponseEntity<Local> buscarUmLocal(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new AtividadeController().buscarUmLocal(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/local")
+    public ResponseEntity<Object> buscarTodosLocal() {
+        return new ResponseEntity<>(new AtividadeController().buscarTodosLocal(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/local/{id}")
+    public ResponseEntity<Erro> apagarLocal(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new AtividadeController().apagarLocal(id), HttpStatus.OK);
     }
 }

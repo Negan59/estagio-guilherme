@@ -2,6 +2,8 @@ package com.sgpd.model;
 
 import java.util.ArrayList;
 
+import com.sgpd.dao.DAOLocal;
+
 public class Local {
     private int id;
     private String nome;
@@ -9,6 +11,10 @@ public class Local {
     private String telefone;
     private String bairro;
     private String cep;
+
+    public Local(){
+        
+    }
 
     public Local(String nome, String endereco, String telefone, String bairro, String cep) {
         this.nome = nome;
@@ -76,22 +82,33 @@ public class Local {
     }
 
     public boolean salvar() {
+        DAOLocal dao = new DAOLocal();
+        if (dao.salvar(this)) {
+            return true;
+        }
         return false;
     }
 
     public boolean alterar() {
+        DAOLocal dao = new DAOLocal();
+        if (dao.alterar(this)) {
+            return true;
+        }
         return false;
     }
 
     public ArrayList<Local> buscarTodos() {
-        return null;
+        DAOLocal dao = new DAOLocal();
+        return dao.buscarTodos();
     }
 
     public boolean apagar(int id) {
-        return false;
+        DAOLocal dao = new DAOLocal();
+        return dao.apagar(id);
     }
 
     public Local buscarUm(int id) {
-        return null;
+        DAOLocal dao = new DAOLocal();
+        return dao.buscarUm(id);
     }
 }

@@ -37,13 +37,17 @@ const TabelaLocal = () => {
   };
 
   const deletaLocal = async (id) => {
-    try {
-      await axios.delete(`http://localhost:8080/api/local/${id}`);
-      setErro({ mensagem: 'Local deletado com sucesso.', sucesso: true });
-      fetchLocais();
-    } catch (error) {
-      setErro({ mensagem: 'Erro ao deletar o local. Por favor, tente novamente.', sucesso: false });
-      // Tratar o erro de acordo com as necessidades do seu aplicativo
+    const confirmacao = window.confirm('Tem certeza que deseja excluir este local?');
+
+    if (confirmacao) {
+      try {
+        await axios.delete(`http://localhost:8080/api/local/${id}`);
+        setErro({ mensagem: 'Local deletado com sucesso.', sucesso: true });
+        fetchLocais();
+      } catch (error) {
+        setErro({ mensagem: 'Erro ao deletar o local. Por favor, tente novamente.', sucesso: false });
+        // Tratar o erro de acordo com as necessidades do seu aplicativo
+      }
     }
   };
 
