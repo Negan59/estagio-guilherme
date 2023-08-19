@@ -82,12 +82,12 @@ public class Rotas {
         return new ResponseEntity<>(new PastoralController().alterar(u), HttpStatus.OK);
     }
 
-    @PutMapping("/pastoral/desativar/{id}")
+    @DeleteMapping("/pastoral/ativos/{id}")
     public ResponseEntity<Erro> desativarPastoral(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new PastoralController().desativar(id), HttpStatus.OK);
     }
 
-    @PutMapping("/pastoral/ativar/{id}")
+    @DeleteMapping("/pastoral/inativos/{id}")
     public ResponseEntity<Erro> ativarPastoral(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new PastoralController().ativar(id), HttpStatus.OK);
     }

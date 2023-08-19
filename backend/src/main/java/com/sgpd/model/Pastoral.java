@@ -39,6 +39,16 @@ public class Pastoral {
         this.dataencerramento = dataencerramento;
     }
 
+    public Pastoral(int id, String nomepastoral, String descricaopastoral, Paroquiano coordenador,
+            LocalDate datacriacao) {
+        this.id = id;
+        this.nomepastoral = nomepastoral;
+        this.descricaopastoral = descricaopastoral;
+        this.coordenador = coordenador;
+        this.datacriacao = datacriacao;
+        this.dataencerramento = dataencerramento;
+    }
+
     public Pastoral() {
     }
 
