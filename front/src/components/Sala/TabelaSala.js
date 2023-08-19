@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import '../../styles/tabela.css';
 import ModalSala from './ModalSala';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Table, Button } from 'react-bootstrap';
+import '../../styles/tabela.css'; // Certifique-se de incluir seus estilos personalizados
 
 const TabelaSalas = () => {
   const [salas, setSalas] = useState([]);
@@ -16,7 +18,7 @@ const TabelaSalas = () => {
   };
 
   const Erro = ({ mensagem, sucesso }) => {
-    const estilo = sucesso ? 'mensagem-sucesso' : 'mensagem-fracasso';
+    const estilo = sucesso ? 'alert alert-success' : 'alert alert-danger';
     return <div className={estilo}>{mensagem}</div>;
   };
 
@@ -37,15 +39,18 @@ const TabelaSalas = () => {
   };
 
   const deletaSala = async (id) => {
-    const userConfirmed = window.confirm("Tem certeza que deseja excluir essa sala?");
-    
+    const userConfirmed = window.confirm('Tem certeza que deseja excluir essa sala?');
+
     if (userConfirmed) {
       try {
         await axios.delete(`http://localhost:8080/api/sala/${id}`);
         setErro({ mensagem: 'Sala deletada com sucesso.', sucesso: true });
         fetchSalas();
       } catch (error) {
-        setErro({ mensagem: 'Erro ao deletar a sala. Por favor, tente novamente.', sucesso: false });
+        setErro({
+          mensagem: 'Erro ao deletar a sala. Por favor, tente novamente.',
+          sucesso: false,
+        });
         // Tratar o erro de acordo com as necessidades do seu aplicativo
       }
     }
@@ -57,10 +62,9 @@ const TabelaSalas = () => {
   }, []);
 
   return (
-    <>
+    <div className="container mt-4">
       {erro && <Erro mensagem={erro.mensagem} sucesso={erro.sucesso} />}
-      <br />
-      <table>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>Número da sala</th>
@@ -75,19 +79,19 @@ const TabelaSalas = () => {
               <td>{sala.numerosala}</td>
               <td>{sala.descricaosala}</td>
               <td>
-                <button className="btn-editar" onClick={() => handleAlterarClick(sala)}>
-                  <FiEdit size={20} color="#00FF00" />
-                </button>
+                <Button variant="danger" onClick={() => deletaSala(sala.id)}>
+                  <FiTrash2 size={20} />
+                </Button>
               </td>
               <td>
-                <button className="btn-excluir" onClick={() => deletaSala(sala.id)}>
-                  <FiTrash2 size={20} color="#FF0000" />
-                </button>
+                <Button variant="success" onClick={() => handleAlterarClick(sala)}>
+                  <FiEdit size={20} />
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
 
       {showModal && salaSelecionada && (
         <ModalSala
@@ -96,7 +100,7 @@ const TabelaSalas = () => {
           onSubmit={handleAlterarSubmit}
         />
       )}
-    </>
+    </div>
   );
 };
 

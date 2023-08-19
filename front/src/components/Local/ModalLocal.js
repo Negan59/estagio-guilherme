@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import InputMask from 'react-input-mask';
-import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-
-import '../../styles/formulario.css';
+import PhoneInput from 'react-phone-number-input';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import { FiSave, FiX } from 'react-icons/fi';
+import InputMask from 'react-input-mask';
 
 const ModalLocal = ({ local, onSubmit, onClose }) => {
   const [id, setId] = useState('');
@@ -15,7 +15,7 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
   const [bairro, setBairro] = useState('');
   const [telefoneErro, setTelefoneErro] = useState(false);
   const [cepErro, setCepErro] = useState(false);
-  const [erro, setErro] = useState('');
+  const [erros, setErros] = useState({});
 
   useEffect(() => {
     if (local) {
@@ -41,18 +41,34 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
     return cepRegex.test(value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
+    setErros({}); // Limpa os erros antes de validar novamente
 
-    setErro('');
+    const novosErros = {};
+
+    if (nome === '') {
+      novosErros.nome = 'Campo obrigatório';
+    }
+
+    if (endereco === '') {
+      novosErros.endereco = 'Campo obrigatório';
+    }
 
     if (!validateTelefone(telefone)) {
-      setTelefoneErro(true);
-      return;
+      novosErros.telefone = 'Telefone inválido';
     }
 
     if (!validateCep(cep)) {
-      setCepErro(true);
+      novosErros.cep = 'CEP inválido';
+    }
+
+    if (bairro === '') {
+      novosErros.bairro = 'Campo obrigatório';
+    }
+
+    if (Object.keys(novosErros).length > 0) {
+      setErros(novosErros);
       return;
     }
 
@@ -64,124 +80,135 @@ const ModalLocal = ({ local, onSubmit, onClose }) => {
       cep: cep,
     };
 
-    try {
-      if (id) {
-        data.id = id;
-        await axios.put(`http://localhost:8080/api/local`, data);
-      } else {
-        await axios.post('http://localhost:8080/api/local', data);
-      }
+    if (id) {
+      data.id = id;
 
-      console.log('Dados salvos com sucesso');
-      if (onSubmit) {
-        onSubmit(data);
-      }
-      setId('');
-      setNome('');
-      setEndereco('');
-      setTelefone('');
-      setBairro('');
-      setCep('');
-      setErro('');
-      onClose();
-    } catch (error) {
-      console.error('Erro ao salvar os dados:', error);
-      setErro('Erro ao salvar o local. Por favor, tente novamente.');
+      axios
+        .put(`http://localhost:8080/api/local`, data)
+        .then((response) => {
+          console.log('Dados atualizados com sucesso:', response.data);
+          onSubmit(response.data);
+          setId('');
+          setNome('');
+          setEndereco('');
+          setTelefone('');
+          setBairro('');
+          setCep('');
+          setErros({});
+          onClose();
+        })
+        .catch((error) => {
+          console.error('Erro ao atualizar os dados:', error);
+          setErros({ erroGeral: 'Erro ao atualizar o local. Por favor, tente novamente.' });
+        });
+    } else {
+      axios
+        .post('http://localhost:8080/api/local', data)
+        .then((response) => {
+          console.log(response.data, response.data.status);
+          if (response.data.status === 200) {
+            setId('');
+            setNome('');
+            setEndereco('');
+            setTelefone('');
+            setBairro('');
+            setCep('');
+            setErros({});
+            onClose();
+          } else {
+            setErros({ erroGeral: 'Erro ao adicionar o local. Por favor, tente novamente.' });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setErros({ erroGeral: 'Erro ao adicionar o local. Por favor, tente novamente.' });
+        });
     }
   };
 
-  const handleModalContentClick = (event) => {
-    event.stopPropagation();
-  };
-
   const handleModalClose = () => {
-    setErro('');
+    setErros({});
     onClose();
   };
 
   return (
-    <div className="modal" onClick={handleModalClose}>
-      <div className="modal-content" onClick={handleModalContentClick}>
-        <h2>{id ? 'Editar Local' : 'Inserir Local'}</h2>
-        {erro && <div className="mensagem-fracasso">{erro}</div>}
-        <form onSubmit={handleSubmit} className="local-form">
-          <div className="form-group">
-            <label htmlFor="id">ID:</label>
-            <input type="number" id="id" value={id} onChange={(e) => setId(e.target.value)} disabled />
-          </div>
-          <div className="form-group">
-            <label htmlFor="nome">Nome:{' '}
-              {nome === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
-            </label>
-            <input
+    <Modal show={true} onHide={handleModalClose} centered dialogClassName="transparent-modal">
+      <Modal.Header closeButton>
+        <Modal.Title>{id ? 'Editar Local' : 'Inserir Local'}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {erros.erroGeral && <Alert variant="danger">{erros.erroGeral}</Alert>}
+        <Form onSubmit={handleSubmit} className="local-form">
+          <Form.Group controlId="formNome">
+            <Form.Label>Nome:</Form.Label>
+            <Form.Control
               type="text"
-              id="nome"
               value={nome}
               onChange={(e) => setNome(e.target.value)}
+              isInvalid={!!erros.nome}
               required
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="endereco">Endereço:{' '}
-              {endereco === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
-            </label>
-            <input
+            <Form.Control.Feedback type="invalid">{erros.nome}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="formEndereco">
+            <Form.Label>Endereço:</Form.Label>
+            <Form.Control
               type="text"
-              id="endereco"
               value={endereco}
               onChange={(e) => setEndereco(e.target.value)}
+              isInvalid={!!erros.endereco}
               required
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="telefone">Telefone:{' '}
-              <PhoneInput
-                defaultCountry="BR"
-                placeholder="Insira o número de telefone"
-                value={telefone}
-                onChange={setTelefone}
-                required
-              />
-              {telefoneErro && <span className="erro">Telefone inválido</span>}
-              {telefone === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
-            </label>
-          </div>
-          <div className="form-group">
-            <label htmlFor="bairro">Bairro:{' '}
-              {bairro === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
-            </label>
-            <input
+            <Form.Control.Feedback type="invalid">{erros.endereco}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="formTelefone">
+            <Form.Label>Telefone:</Form.Label>
+            <PhoneInput
+              defaultCountry="BR"
+              placeholder="Insira o número de telefone"
+              value={telefone}
+              onChange={setTelefone}
+              onBlur={() => setTelefoneErro(!validateTelefone(telefone))}
+              isInvalid={!!erros.telefone || (telefoneErro && telefone !== '')}
+              required
+            />
+            <Form.Control.Feedback type="invalid">{erros.telefone}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="formBairro">
+            <Form.Label>Bairro:</Form.Label>
+            <Form.Control
               type="text"
-              id="bairro"
               value={bairro}
               onChange={(e) => setBairro(e.target.value)}
+              isInvalid={!!erros.bairro}
               required
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="cep">CEP:{' '}
-              <InputMask
-                mask="99999-999"
-                placeholder="12345-678"
-                value={cep}
-                onChange={(e) => setCep(e.target.value)}
-                required
-              />
-              {cepErro && <span className="erro">CEP inválido</span>}
-              {cep === '' && <span className="campo-obrigatorio">* Obrigatório</span>}
-            </label>
-          </div>
-          <div className="modal-buttons">
-            <button type="submit" className="btn-salvar" id="btn-salvar">
-              {id ? 'Atualizar' : 'Salvar'}
-            </button>
-            <button type="button" className="btn-fechar" onClick={handleModalClose}>
-              Fechar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            <Form.Control.Feedback type="invalid">{erros.bairro}</Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="formCep">
+            <Form.Label>CEP:</Form.Label>
+            <Form.Control
+              type="text"
+              value={cep}
+              onChange={(e) => setCep(e.target.value)}
+              onBlur={() => setCepErro(!validateCep(cep))}
+              isInvalid={!!erros.cep || (cepErro && cep !== '')}
+              required
+              placeholder="12345-678"
+            />
+            <Form.Control.Feedback type="invalid">{erros.cep}</Form.Control.Feedback>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="success" type="submit" onClick={handleSubmit}>
+          <FiSave /> {id ? 'Atualizar' : 'Salvar'}
+        </Button>
+        <Button variant="danger" onClick={handleModalClose}>
+          <FiX /> Fechar
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

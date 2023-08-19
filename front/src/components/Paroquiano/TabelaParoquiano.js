@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import '../../styles/tabela.css';
 import ModalParoquiano from './ModalParoquiano';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Table, Button } from 'react-bootstrap';
+import '../../styles/tabela.css'; // Certifique-se de incluir suas estilos personalizados
 
 const TabelaParoquianos = () => {
   const [paroquianos, setParoquianos] = useState([]);
@@ -16,17 +18,17 @@ const TabelaParoquianos = () => {
   };
 
   const Erro = ({ mensagem, sucesso }) => {
-    const estilo = sucesso ? 'mensagem-sucesso' : 'mensagem-fracasso';
+    const estilo = sucesso ? 'alert alert-success' : 'alert alert-danger';
     return <div className={estilo}>{mensagem}</div>;
   };
 
   const handleAlterarSubmit = (dadosParoquiano) => {
     // Fechar o modal
-    fetchParoquianos();
+    buscarParoquianos();
     setShowModal(false);
   };
-  
-  const fetchParoquianos = async () => {
+
+  const buscarParoquianos = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/paroquiano');
       setParoquianos(response.data);
@@ -38,9 +40,11 @@ const TabelaParoquianos = () => {
 
   const deletaParoquiano = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/paroquiano/${id}`);
-      setErro({ mensagem: 'Paroquiano deletado com sucesso.', sucesso: true });
-      fetchParoquianos();
+      if (window.confirm('Tem certeza que deseja excluir este paroquiano?')) {
+        await axios.delete(`http://localhost:8080/api/paroquiano/${id}`);
+        setErro({ mensagem: 'Paroquiano deletado com sucesso.', sucesso: true });
+        buscarParoquianos();
+      }
     } catch (error) {
       setErro({ mensagem: 'Erro ao deletar o paroquiano. Por favor, tente novamente.', sucesso: false });
       // Tratar o erro de acordo com as necessidades do seu aplicativo
@@ -48,17 +52,13 @@ const TabelaParoquianos = () => {
   };
 
   useEffect(() => {
-    // Função para buscar os dados dos paroquianos
-
-    // Chamar a função de busca dos paroquianos
-    fetchParoquianos();
+    buscarParoquianos();
   }, []);
 
   return (
-    <>
+    <div className="container mt-4">
       {erro && <Erro mensagem={erro.mensagem} sucesso={erro.sucesso} />}
-      <br></br>
-      <table>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>ID</th>
@@ -81,19 +81,19 @@ const TabelaParoquianos = () => {
               <td>{paroquiano.email}</td>
               <td>{paroquiano.senha}</td>
               <td>
-                <button className="btn-excluir" onClick={() => deletaParoquiano(paroquiano.id)}>
-                  <FiTrash2 size={20} color="#FF0000" />
-                </button>
+                <Button variant="danger" onClick={() => deletaParoquiano(paroquiano.id)}>
+                  <FiTrash2 size={20} />
+                </Button>
               </td>
               <td>
-                <button className="btn-editar" onClick={() => handleAlterarClick(paroquiano)}>
-                  <FiEdit size={20} color="#00FF00" />
-                </button>
+                <Button variant="success" onClick={() => handleAlterarClick(paroquiano)}>
+                  <FiEdit size={20} />
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
 
       {showModal && paroquianoSelecionado && (
         <ModalParoquiano
@@ -102,7 +102,7 @@ const TabelaParoquianos = () => {
           onSubmit={handleAlterarSubmit}
         />
       )}
-    </>
+    </div>
   );
 };
 

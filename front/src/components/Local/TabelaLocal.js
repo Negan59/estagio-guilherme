@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import '../../styles/tabela.css';
 import ModalLocal from './ModalLocal';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Table, Button } from 'react-bootstrap';
+import '../../styles/tabela.css'; // Certifique-se de incluir seus estilos personalizados
 
 const TabelaLocal = () => {
   const [locais, setLocais] = useState([]);
@@ -16,17 +18,17 @@ const TabelaLocal = () => {
   };
 
   const Erro = ({ mensagem, sucesso }) => {
-    const estilo = sucesso ? 'mensagem-sucesso' : 'mensagem-fracasso';
+    const estilo = sucesso ? 'alert alert-success' : 'alert alert-danger';
     return <div className={estilo}>{mensagem}</div>;
   };
 
   const handleAlterarSubmit = (dadosLocal) => {
     // Fechar o modal
-    fetchLocais();
+    buscarLocais();
     setShowModal(false);
   };
 
-  const fetchLocais = async () => {
+  const buscarLocais = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/local');
       setLocais(response.data);
@@ -37,30 +39,26 @@ const TabelaLocal = () => {
   };
 
   const deletaLocal = async (id) => {
-    const confirmacao = window.confirm('Tem certeza que deseja excluir este local?');
-
-    if (confirmacao) {
-      try {
+    try {
+      if (window.confirm('Tem certeza que deseja excluir este local?')) {
         await axios.delete(`http://localhost:8080/api/local/${id}`);
         setErro({ mensagem: 'Local deletado com sucesso.', sucesso: true });
-        fetchLocais();
-      } catch (error) {
-        setErro({ mensagem: 'Erro ao deletar o local. Por favor, tente novamente.', sucesso: false });
-        // Tratar o erro de acordo com as necessidades do seu aplicativo
+        buscarLocais();
       }
+    } catch (error) {
+      setErro({ mensagem: 'Erro ao deletar o local. Por favor, tente novamente.', sucesso: false });
+      // Tratar o erro de acordo com as necessidades do seu aplicativo
     }
   };
 
   useEffect(() => {
-    // Função para buscar os dados dos locais
-    fetchLocais();
+    buscarLocais();
   }, []);
 
   return (
-    <>
+    <div className="container mt-4">
       {erro && <Erro mensagem={erro.mensagem} sucesso={erro.sucesso} />}
-      <br />
-      <table>
+      <Table striped bordered hover>
         <thead>
           <tr>
             <th>Nome</th>
@@ -81,19 +79,19 @@ const TabelaLocal = () => {
               <td>{local.bairro}</td>
               <td>{local.cep}</td>
               <td>
-                <button className="btn-excluir" onClick={() => deletaLocal(local.id)}>
-                  <FiTrash2 size={20} color="#FF0000" />
-                </button>
+                <Button variant="danger" onClick={() => deletaLocal(local.id)}>
+                  <FiTrash2 size={20} />
+                </Button>
               </td>
               <td>
-                <button className="btn-editar" onClick={() => handleAlterarClick(local)}>
-                  <FiEdit size={20} color="#00FF00" />
-                </button>
+                <Button variant="success" onClick={() => handleAlterarClick(local)}>
+                  <FiEdit size={20} />
+                </Button>
               </td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
 
       {showModal && localSelecionado && (
         <ModalLocal
@@ -102,7 +100,7 @@ const TabelaLocal = () => {
           onSubmit={handleAlterarSubmit}
         />
       )}
-    </>
+    </div>
   );
 };
 

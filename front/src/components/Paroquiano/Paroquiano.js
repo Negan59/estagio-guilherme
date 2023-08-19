@@ -22,7 +22,13 @@ const Paroquiano = () => {
       <button className="botao" onClick={handleModalToggle}>
         Adicionar Paroquiano
       </button>
-      {showModal && <ModalParoquiano onClose={handleModalToggle} />}
+      {showModal && (
+        <ModalParoquiano
+          onClose={handleModalToggle}
+          backdrop="static"
+          keyboard={false}
+        />
+      )}
       <div className="tabela-container">
         <h2>Paroquianos cadastrados</h2>
         <TabelaParoquiano key={reloadKey} />

@@ -31,57 +31,6 @@
   }
 
 
-  
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .modal h2 {
-    margin-top: 0;
-  }
-  
-  .modal .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .modal label {
-    font-weight: bold;
-    margin-bottom: 4px;
-  }
-  
-  .modal input {
-    padding: 8px;
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .modal button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .modal button.btn-salvar {
-    background-color: green;
-    margin-right: 3px;
-  }
-  
-  .modal button.btn-fechar {
-    background-color: red;
-    margin-left: 3px;
-  }
-
   .campo-obrigatorio {
     color: red;
     font-size: 12px;
