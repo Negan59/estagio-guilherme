@@ -1,6 +1,5 @@
 package com.sgpd.model;
 
-import java.util.ArrayList;
 
 public class Padre extends Pessoa {
     private String paroquia;

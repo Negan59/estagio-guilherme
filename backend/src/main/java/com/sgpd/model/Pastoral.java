@@ -46,7 +46,6 @@ public class Pastoral {
         this.descricaopastoral = descricaopastoral;
         this.coordenador = coordenador;
         this.datacriacao = datacriacao;
-        this.dataencerramento = dataencerramento;
     }
 
     public Pastoral() {

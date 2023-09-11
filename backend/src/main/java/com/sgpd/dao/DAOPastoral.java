@@ -40,8 +40,7 @@ public class DAOPastoral {
     }
 
     public boolean ativar(int id){
-        String sql = "update pastoral set dataencerramento_pastoral = '$1' where idPastoral = "+id;
-        sql = sql.replace("$1", null);
+        String sql = "update pastoral set dataencerramento_pastoral = NULL where idPastoral = "+id;
         SingletonConexao con = SingletonConexao.getConexao();
         boolean flag = con.manipular(sql);
         return flag;

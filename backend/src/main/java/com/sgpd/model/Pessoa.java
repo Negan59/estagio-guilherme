@@ -1,6 +1,5 @@
 package com.sgpd.model;
 
-import java.util.ArrayList;
 
 public abstract class Pessoa {
     private int id;

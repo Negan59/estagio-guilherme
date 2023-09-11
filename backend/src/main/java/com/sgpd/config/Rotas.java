@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.sgpd.control.AgendaController;
 import com.sgpd.control.AtividadeController;
+import com.sgpd.control.FuncionarioController;
 import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
 import com.sgpd.model.Erro;
+import com.sgpd.model.Funcionario;
 import com.sgpd.model.Local;
 import com.sgpd.model.Paroquiano;
 import com.sgpd.model.Pastoral;
@@ -131,5 +133,41 @@ public class Rotas {
     @DeleteMapping("/local/{id}")
     public ResponseEntity<Erro> apagarLocal(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new AtividadeController().apagarLocal(id), HttpStatus.OK);
+    }
+
+    //funcionarios
+    @PostMapping("/funcionario")
+    public ResponseEntity<Erro> inserirFuncionario(@RequestBody Funcionario funcionario) {
+        return new ResponseEntity<>(new FuncionarioController().salvar(funcionario), HttpStatus.OK);
+    }
+
+    @PutMapping("/funcionario")
+    public ResponseEntity<Erro> alterarFuncionario(@RequestBody Funcionario funcionario) {
+        return new ResponseEntity<>(new FuncionarioController().alterar(funcionario), HttpStatus.OK);
+    }
+
+    @GetMapping("/funcionario/{id}")
+    public ResponseEntity<Funcionario> buscarUmFuncionario(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new FuncionarioController().buscarUm(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/funcionario/ativos")
+    public ResponseEntity<Object> buscarTodosFuncionarioAtivo() {
+        return new ResponseEntity<>(new FuncionarioController().buscarTodos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/funcionario/inativos")
+    public ResponseEntity<Object> buscarTodosFuncionarioInativo() {
+        return new ResponseEntity<>(new FuncionarioController().buscarTodosInativos(), HttpStatus.OK);
+    }
+
+    @PutMapping("/funcionario/ativos/{id}")
+    public ResponseEntity<Erro> ativarFuncionario(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new FuncionarioController().desativar(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/funcionario/inativos/{id}")
+    public ResponseEntity<Erro> desativarFuncionario(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new FuncionarioController().ativar(id), HttpStatus.OK);
     }
 }

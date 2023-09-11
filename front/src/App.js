@@ -11,6 +11,7 @@ import Local from './components/Local/Local';
 import TipoAtividade from './components/TipoAtividade/TipoAtividade'
 import Aluguel from './components/Aluguel/Aluguel';
 import Evento from './components/Evento/Evento';
+import Funcionario from './components/Funcionario/Funcionario';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/aluguel" element={<Aluguel />} />
           <Route path="/evento" element={<Evento />} />
+          <Route path="/funcionario" element={<Funcionario />} />
           <Route path="/local" element={<Local />} />
           <Route path="/sala" element={<Sala />} />
           <Route path='/paroquiano' element={<Paroquiano></Paroquiano>}></Route>
