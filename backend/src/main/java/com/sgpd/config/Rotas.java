@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import com.sgpd.control.AgendaController;
 import com.sgpd.control.AtividadeController;
 import com.sgpd.control.FuncionarioController;
+import com.sgpd.control.PadreController;
 import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
 import com.sgpd.model.Erro;
 import com.sgpd.model.Funcionario;
 import com.sgpd.model.Local;
+import com.sgpd.model.Padre;
 import com.sgpd.model.Paroquiano;
 import com.sgpd.model.Pastoral;
 import com.sgpd.model.Sala;
@@ -169,5 +171,41 @@ public class Rotas {
     @PutMapping("/funcionario/inativos/{id}")
     public ResponseEntity<Erro> desativarFuncionario(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new FuncionarioController().ativar(id), HttpStatus.OK);
+    }
+
+    //padre
+    @PostMapping("/padre")
+    public ResponseEntity<Erro> inserirPadre(@RequestBody Padre padre) {
+        return new ResponseEntity<>(new PadreController().salvar(padre), HttpStatus.OK);
+    }
+
+    @PutMapping("/padre")
+    public ResponseEntity<Erro> alterarPadre(@RequestBody Padre padre) {
+        return new ResponseEntity<>(new PadreController().alterar(padre), HttpStatus.OK);
+    }
+
+    @GetMapping("/padre/{id}")
+    public ResponseEntity<Padre> buscarUmPadre(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new PadreController().buscarUm(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/padre/ativos")
+    public ResponseEntity<Object> buscarTodosPadreAtivo() {
+        return new ResponseEntity<>(new PadreController().buscarTodos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/padre/inativos")
+    public ResponseEntity<Object> buscarTodosPadreInativo() {
+        return new ResponseEntity<>(new PadreController().buscarTodosInativos(), HttpStatus.OK);
+    }
+
+    @PutMapping("/padre/ativos/{id}")
+    public ResponseEntity<Erro> ativarPadre(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new PadreController().desativar(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/padre/inativos/{id}")
+    public ResponseEntity<Erro> desativarPadre(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new PadreController().ativar(id), HttpStatus.OK);
     }
 }

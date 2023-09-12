@@ -39,6 +39,10 @@ public class Funcionario extends Pessoa {
         this.status = status;
     }
 
+     public Funcionario(int id, String nome, String foto, String telefone, String email) {
+        super(id, nome, foto, telefone, email);
+    }
+
     public Funcionario(){
 
     }

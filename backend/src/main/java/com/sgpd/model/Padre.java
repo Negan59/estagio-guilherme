@@ -1,17 +1,38 @@
 package com.sgpd.model;
 
+import java.util.ArrayList;
+
+import com.sgpd.dao.DAOPadre;
 
 public class Padre extends Pessoa {
     private String paroquia;
+    private boolean status;
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 
     public Padre(String nome, String foto, String telefone, String email, String paroquia) {
         super(nome, foto, telefone, email);
         this.paroquia = paroquia;
     }
 
-    public Padre(int id, String nome, String foto, String telefone, String email, String paroquia) {
+    public Padre(int id, String nome, String foto, String telefone, String email, String paroquia,boolean status) {
         super(id, nome, foto, telefone, email);
         this.paroquia = paroquia;
+        this.status = status;
+    }
+
+    public Padre(int id, String nome, String foto, String telefone, String email) {
+        super(id, nome, foto, telefone, email);
+    }
+
+    public Padre(){
+        
     }
 
     public String getParoquia() {
@@ -24,22 +45,51 @@ public class Padre extends Pessoa {
 
     @Override
     public boolean salvar() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'salvar'");
+        DAOPadre dao = new DAOPadre();
+        if (dao.salvar(this)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean alterar() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'alterar'");
+        DAOPadre dao = new DAOPadre();
+        if (dao.alterar(this)) {
+            return true;
+        }
+        return false;
     }
-
-
 
     @Override
     public boolean apagar(int id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'apagar'");
+        DAOPadre dao = new DAOPadre();
+        return dao.apagar(id);
+    }
+
+    public boolean ativar(int id){
+        DAOPadre dao = new DAOPadre();
+        return dao.ativar(id);
+    }
+
+    public boolean desativar(int id){
+        DAOPadre dao = new DAOPadre();
+        return dao.desativar(id);
+    }
+
+    public ArrayList<Padre> buscarTodos() {
+        DAOPadre dao = new DAOPadre();
+        return dao.buscarTodos();
+    }
+
+    public ArrayList<Padre> buscarTodosInativos() {
+        DAOPadre dao = new DAOPadre();
+        return dao.buscarTodosInativos();
+    }
+
+    public Padre buscarUm(int id) {
+        DAOPadre dao = new DAOPadre();
+        return dao.buscarUm(id);
     }
 
 }

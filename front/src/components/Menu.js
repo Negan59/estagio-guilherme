@@ -44,6 +44,10 @@ class MyMenu extends React.Component {
               <FontAwesomeIcon icon={faMapMarkerAlt} className="submenu-icon mr-2" />
               Local
             </a>
+            <a href="/padre" className="submenu-item">
+              <FontAwesomeIcon icon={faUserFriends} className="submenu-icon mr-2" />
+              Padres
+            </a>
             <a href="/paroquiano" className="submenu-item">
               <FontAwesomeIcon icon={faUserFriends} className="submenu-icon mr-2" />
               Paroquianos
