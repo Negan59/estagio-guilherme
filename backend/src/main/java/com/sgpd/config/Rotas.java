@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.sgpd.control.AgendaController;
+import com.sgpd.control.AluguelController;
 import com.sgpd.control.AtividadeController;
 import com.sgpd.control.FuncionarioController;
 import com.sgpd.control.ItensSalaoParoquialController;
@@ -12,6 +13,7 @@ import com.sgpd.control.PadreController;
 import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
 import com.sgpd.control.TipoAtividadeController;
+import com.sgpd.model.Aluguel;
 import com.sgpd.model.Erro;
 import com.sgpd.model.Funcionario;
 import com.sgpd.model.ItensSalaoParoquial;
@@ -283,6 +285,32 @@ public class Rotas {
     @PutMapping("/itemsalao/inativos/{id}")
     public ResponseEntity<Erro> desativarItensSalaoParoquial(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new ItensSalaoParoquialController().ativar(id), HttpStatus.OK);
+    }
+
+    // Aluguel
+    @PostMapping("/aluguel")
+    public ResponseEntity<Erro> inserirAluguel(@RequestBody Aluguel u) {
+        return new ResponseEntity<>(new AluguelController().salvar(u), HttpStatus.OK);
+    }
+
+    @PutMapping("/aluguel")
+    public ResponseEntity<Erro> alterarAluguel(@RequestBody Aluguel u) {
+        return new ResponseEntity<>(new AluguelController().alterar(u), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/aluguel/{id}")
+    public ResponseEntity<Erro> apagarAluguel(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new AluguelController().apagar(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/aluguel/{id}")
+    public ResponseEntity<Aluguel> buscarUmAluguel(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<Aluguel>(new AluguelController().buscarUm(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/aluguel")
+    public ResponseEntity<Object> buscarTodosAluguel() {
+        return new ResponseEntity<>(new AluguelController().buscarTodos(), HttpStatus.OK);
     }
 
 

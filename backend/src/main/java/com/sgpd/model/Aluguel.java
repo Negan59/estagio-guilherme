@@ -3,6 +3,8 @@ package com.sgpd.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.sgpd.dao.DAOAluguel;
+
 public class Aluguel {
     private int id;
     private String nomealuguel;
@@ -11,6 +13,10 @@ public class Aluguel {
     private double valoradicional;
     private LocalDate data;
     private String telefone;
+
+    public Aluguel(){
+        
+    }
 
     public Aluguel(String nomealuguel, String documento, double valor, double valoradicional, LocalDate data,
             String telefone) {
@@ -90,23 +96,34 @@ public class Aluguel {
     }
 
     public boolean salvar() {
+        DAOAluguel dao = new DAOAluguel();
+        if (dao.salvar(this)) {
+            return true;
+        }
         return false;
     }
 
     public boolean alterar() {
+        DAOAluguel dao = new DAOAluguel();
+        if (dao.alterar(this)) {
+            return true;
+        }
         return false;
     }
 
     public ArrayList<Aluguel> buscarTodos() {
-        return null;
+        DAOAluguel dao = new DAOAluguel();
+        return dao.buscarTodos();
     }
 
     public boolean apagar(int id) {
-        return false;
+        DAOAluguel dao = new DAOAluguel();
+        return dao.apagar(id);
     }
 
     public Aluguel buscarUm(int id) {
-        return null;
+        DAOAluguel dao = new DAOAluguel();
+        return dao.buscarUm(id);
     }
 
 }
