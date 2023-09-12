@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import TabelaTipoAtividade from './TabelaTipoAtividade';
 import ModalTipoAtividade from './ModalTipoAtividade';
 import '../../styles/formulario.css';
+import TabelaTipoAtividades from './TabelaTipoAtividade';
 
 const TipoAtividade = () => {
   const [showModal, setShowModal] = useState(false);
@@ -24,8 +24,8 @@ const TipoAtividade = () => {
       </button>
       {showModal && <ModalTipoAtividade onClose={handleModalToggle} />}
       <div className="tabela-container">
-        <h2>Tipos de Atividade cadastrados</h2>
-        <TabelaTipoAtividade key={reloadKey} />
+        <h2>Tipo de Atividades cadastrados</h2>
+        <TabelaTipoAtividades key={reloadKey} />
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ package com.sgpd.model;
 
 import java.util.ArrayList;
 
+import com.sgpd.dao.DAOTipoAtividade;
+
 public class TipoAtividade {
     private int id;
     private String nome;
@@ -16,6 +18,15 @@ public class TipoAtividade {
         this.id = id;
         this.nome = nome;
         this.status = status;
+    }
+
+    public TipoAtividade(int id, String nome){
+        this.id = id;
+        this.nome = nome;
+    }
+
+    public TipoAtividade(){
+        
     }
 
     public int getId() {
@@ -43,23 +54,44 @@ public class TipoAtividade {
     }
 
     public boolean salvar() {
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        if (dao.salvar(this)) {
+            return true;
+        }
         return false;
     }
 
     public boolean alterar() {
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        if (dao.alterar(this)) {
+            return true;
+        }
         return false;
+    }
+
+    public boolean ativar(int id){
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        return dao.ativar(id);
+    }
+
+    public boolean desativar(int id){
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        return dao.desativar(id);
     }
 
     public ArrayList<TipoAtividade> buscarTodos() {
-        return null;
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        return dao.buscarTodos();
     }
 
-    public boolean apagar(int id) {
-        return false;
+    public ArrayList<TipoAtividade> buscarTodosInativos() {
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        return dao.buscarTodosInativos();
     }
 
     public TipoAtividade buscarUm(int id) {
-        return null;
+        DAOTipoAtividade dao = new DAOTipoAtividade();
+        return dao.buscarUm(id);
     }
 
 }

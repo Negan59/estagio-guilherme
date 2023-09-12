@@ -10,6 +10,7 @@ import com.sgpd.control.FuncionarioController;
 import com.sgpd.control.PadreController;
 import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
+import com.sgpd.control.TipoAtividadeController;
 import com.sgpd.model.Erro;
 import com.sgpd.model.Funcionario;
 import com.sgpd.model.Local;
@@ -17,6 +18,7 @@ import com.sgpd.model.Padre;
 import com.sgpd.model.Paroquiano;
 import com.sgpd.model.Pastoral;
 import com.sgpd.model.Sala;
+import com.sgpd.model.TipoAtividade;
 
 @CrossOrigin
 @RestController
@@ -208,4 +210,41 @@ public class Rotas {
     public ResponseEntity<Erro> desativarPadre(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new PadreController().ativar(id), HttpStatus.OK);
     }
+
+    //tipoatividade
+    @PostMapping("/tipoatividade")
+    public ResponseEntity<Erro> inserirTipoAtividade(@RequestBody TipoAtividade tipoatividade) {
+        return new ResponseEntity<>(new TipoAtividadeController().salvar(tipoatividade), HttpStatus.OK);
+    }
+
+    @PutMapping("/tipoatividade")
+    public ResponseEntity<Erro> alterarTipoAtividade(@RequestBody TipoAtividade tipoatividade) {
+        return new ResponseEntity<>(new TipoAtividadeController().alterar(tipoatividade), HttpStatus.OK);
+    }
+
+    @GetMapping("/tipoatividade/{id}")
+    public ResponseEntity<TipoAtividade> buscarUmTipoAtividade(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new TipoAtividadeController().buscarUm(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/tipoatividade/ativos")
+    public ResponseEntity<Object> buscarTodosTipoAtividadeAtivo() {
+        return new ResponseEntity<>(new TipoAtividadeController().buscarTodos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/tipoatividade/inativos")
+    public ResponseEntity<Object> buscarTodosTipoAtividadeInativo() {
+        return new ResponseEntity<>(new TipoAtividadeController().buscarTodosInativos(), HttpStatus.OK);
+    }
+
+    @PutMapping("/tipoatividade/ativos/{id}")
+    public ResponseEntity<Erro> ativarTipoAtividade(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new TipoAtividadeController().desativar(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/tipoatividade/inativos/{id}")
+    public ResponseEntity<Erro> desativarTipoAtividade(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new TipoAtividadeController().ativar(id), HttpStatus.OK);
+    }
+
 }

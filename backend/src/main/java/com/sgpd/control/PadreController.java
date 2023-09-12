@@ -62,7 +62,7 @@ public class PadreController {
             return new Erro("Sucesso", false, 200);
         }
         else{
-            return new Erro("Ero ao ativar funcionário", true, 400);
+            return new Erro("Ero ao ativar padre", true, 400);
         }
     }
 
