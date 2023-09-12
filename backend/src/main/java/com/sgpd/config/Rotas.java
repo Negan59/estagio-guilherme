@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import com.sgpd.control.AgendaController;
 import com.sgpd.control.AtividadeController;
 import com.sgpd.control.FuncionarioController;
+import com.sgpd.control.ItensSalaoParoquialController;
 import com.sgpd.control.PadreController;
 import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
 import com.sgpd.control.TipoAtividadeController;
 import com.sgpd.model.Erro;
 import com.sgpd.model.Funcionario;
+import com.sgpd.model.ItensSalaoParoquial;
 import com.sgpd.model.Local;
 import com.sgpd.model.Padre;
 import com.sgpd.model.Paroquiano;
@@ -246,5 +248,42 @@ public class Rotas {
     public ResponseEntity<Erro> desativarTipoAtividade(@PathVariable(value = "id") int id) {
         return new ResponseEntity<>(new TipoAtividadeController().ativar(id), HttpStatus.OK);
     }
+
+    //itemsalao
+    @PostMapping("/itemsalao")
+    public ResponseEntity<Erro> inserirItensSalaoParoquial(@RequestBody ItensSalaoParoquial itemsalao) {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().salvar(itemsalao), HttpStatus.OK);
+    }
+
+    @PutMapping("/itemsalao")
+    public ResponseEntity<Erro> alterarItensSalaoParoquial(@RequestBody ItensSalaoParoquial itemsalao) {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().alterar(itemsalao), HttpStatus.OK);
+    }
+
+    @GetMapping("/itemsalao/{id}")
+    public ResponseEntity<ItensSalaoParoquial> buscarUmItensSalaoParoquial(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().buscarUm(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/itemsalao/ativos")
+    public ResponseEntity<Object> buscarTodosItensSalaoParoquialAtivo() {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().buscarTodos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/itemsalao/inativos")
+    public ResponseEntity<Object> buscarTodosItensSalaoParoquialInativo() {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().buscarTodosInativos(), HttpStatus.OK);
+    }
+
+    @PutMapping("/itemsalao/ativos/{id}")
+    public ResponseEntity<Erro> ativarItensSalaoParoquial(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().desativar(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/itemsalao/inativos/{id}")
+    public ResponseEntity<Erro> desativarItensSalaoParoquial(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new ItensSalaoParoquialController().ativar(id), HttpStatus.OK);
+    }
+
 
 }

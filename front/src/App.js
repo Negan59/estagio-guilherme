@@ -13,6 +13,7 @@ import Aluguel from './components/Aluguel/Aluguel';
 import Evento from './components/Evento/Evento';
 import Funcionario from './components/Funcionario/Funcionario';
 import Padre from './components/Padre/Padre';
+import ItensSalaoParoquial from './components/ItensSalaoParoquial/ItensSalaoParoquial';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/aluguel" element={<Aluguel />} />
           <Route path="/evento" element={<Evento />} />
           <Route path="/funcionario" element={<Funcionario />} />
+          <Route path="/itemsalao" element={<ItensSalaoParoquial />} />
           <Route path="/local" element={<Local />} />
           <Route path="/sala" element={<Sala />} />
           <Route path='/padre' element={<Padre></Padre>}></Route>
