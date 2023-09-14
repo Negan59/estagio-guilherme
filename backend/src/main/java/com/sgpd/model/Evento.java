@@ -15,6 +15,52 @@ public class Evento {
     private String telefone;
     private String observacao;
     private Aluguel aluguel;
+    private String foto;
+
+    public Evento(){
+        
+    }
+
+    public Evento(String nomeevento, LocalDate dataevento, String horainicio, String horafim, String horainiarrumacao,
+            String horafimarrumacao, LocalDate dataarrumacao, String telefone, String observacao, Aluguel aluguel,
+            String foto) {
+        this.nomeevento = nomeevento;
+        this.dataevento = dataevento;
+        this.horainicio = horainicio;
+        this.horafim = horafim;
+        this.horainiarrumacao = horainiarrumacao;
+        this.horafimarrumacao = horafimarrumacao;
+        this.dataarrumacao = dataarrumacao;
+        this.telefone = telefone;
+        this.observacao = observacao;
+        this.aluguel = aluguel;
+        this.foto = foto;
+    }
+
+    public Evento(int id, String nomeevento, LocalDate dataevento, String horainicio, String horafim,
+            String horainiarrumacao, String horafimarrumacao, LocalDate dataarrumacao, String telefone,
+            String observacao, Aluguel aluguel, String foto) {
+        this.id = id;
+        this.nomeevento = nomeevento;
+        this.dataevento = dataevento;
+        this.horainicio = horainicio;
+        this.horafim = horafim;
+        this.horainiarrumacao = horainiarrumacao;
+        this.horafimarrumacao = horafimarrumacao;
+        this.dataarrumacao = dataarrumacao;
+        this.telefone = telefone;
+        this.observacao = observacao;
+        this.aluguel = aluguel;
+        this.foto = foto;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
 
     public Evento(String nomeevento, LocalDate dataevento, String horainicio, String horafim, String horainiarrumacao,
             String horafimarrumacao, LocalDate dataarrumacao, String telefone, String observacao) {
