@@ -1,76 +1,95 @@
 import React from 'react';
-import { slide as Menu } from 'react-burger-menu';
-import '../styles/menu.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faPlusSquare, faCalendar, faMapMarkerAlt, faUserFriends, faUsers, faDoorOpen, faListAlt } from '@fortawesome/free-solid-svg-icons';
+import { Layout, Menu } from 'antd';
+import {
+  HomeOutlined,
+  PlusSquareOutlined,
+  CalendarOutlined,
+  EnvironmentOutlined,
+  UserOutlined,
+  TeamOutlined,
+  LogoutOutlined,
+  BarsOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+
+import './Styles/app.css';
+
+const { Sider } = Layout;
 
 class MyMenu extends React.Component {
-  showSettings(event) {
-    event.preventDefault();
-    // Lógica para mostrar as configurações do menu
-  }
+  state = {
+    collapsed: false,
+  };
+
+  toggleCollapsed = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+    });
+  };
 
   render() {
     return (
-      <Menu>
+      <Sider
+        collapsible
+        collapsed={this.state.collapsed}
+        onCollapse={this.toggleCollapsed}
+        theme="dark"
+        className={`custom-sider ${this.state.collapsed ? 'collapsed' : ''}`}
+      >
         <div className="container logo-container mb-4">
           {/* ... */}
         </div>
-        <a id="home" className="menu-item" href="/">
-          <FontAwesomeIcon icon={faHome} className="menu-icon mr-2" />
-          Home
-        </a>
-        <div className="menu-item--submenu">
-          <input type="checkbox" className="submenu-checkbox" id="cadastros-checkbox" />
-          <label htmlFor="cadastros-checkbox" className="menu-item">
-            <FontAwesomeIcon icon={faPlusSquare} className="menu-icon mr-2" />
-            Cadastros
-          </label>
-          <div className="submenu">
-            <a href="/aluguel" className="submenu-item">
-              <FontAwesomeIcon icon={faCalendar} className="submenu-icon mr-2" />
-              Aluguel
-            </a>
-            <a href="/evento" className="submenu-item">
-              <FontAwesomeIcon icon={faCalendar} className="submenu-icon mr-2" />
-              Evento
-            </a>
-            <a href="/funcionario" className="submenu-item">
-              <FontAwesomeIcon icon={faUsers} className="submenu-icon mr-2" />
-              Funcionário
-            </a>
-            <a href="/itemsalao" className="submenu-item">
-              <FontAwesomeIcon icon={faListAlt} className="submenu-icon mr-2" />
-              Item do Salão Paroquial
-            </a>
-            <a href="/local" className="submenu-item">
-              <FontAwesomeIcon icon={faMapMarkerAlt} className="submenu-icon mr-2" />
-              Local
-            </a>
-            <a href="/padre" className="submenu-item">
-              <FontAwesomeIcon icon={faUserFriends} className="submenu-icon mr-2" />
-              Padres
-            </a>
-            <a href="/paroquiano" className="submenu-item">
-              <FontAwesomeIcon icon={faUserFriends} className="submenu-icon mr-2" />
-              Paroquianos
-            </a>
-            <a href="/pastoral" className="submenu-item">
-              <FontAwesomeIcon icon={faUsers} className="submenu-icon mr-2" />
-              Pastorais
-            </a>
-            <a href="/sala" className="submenu-item">
-              <FontAwesomeIcon icon={faDoorOpen} className="submenu-icon mr-2" />
-              Salas
-            </a>
-            <a href="/tipoatividade" className="submenu-item">
-              <FontAwesomeIcon icon={faListAlt} className="submenu-icon mr-2" />
-              Tipo Atividade
-            </a>
-          </div>
-        </div>
-      </Menu>
+        <Menu
+          theme="dark"
+          mode="vertical"
+          defaultSelectedKeys={['home']}
+          inlineCollapsed={this.state.collapsed}
+        >
+          <Menu.Item key="home" icon={<HomeOutlined />}>
+            <Link to="/">Home</Link>
+          </Menu.Item>
+          <Menu.SubMenu
+            key="cadastros"
+            title="Cadastros"
+            icon={<PlusSquareOutlined />}
+          >
+            <Menu.Item key="aluguel" icon={<CalendarOutlined />}>
+              <Link to="/aluguel">Aluguel</Link>
+            </Menu.Item>
+            <Menu.Item key="evento" icon={<CalendarOutlined />}>
+              <Link to="/evento">Evento</Link>
+            </Menu.Item>
+            <Menu.Item key="funcionario" icon={<UserOutlined />}>
+              <Link to="/funcionario">Funcionário</Link>
+            </Menu.Item>
+            <Menu.Item key="itemsalao" icon={<UnorderedListOutlined />}>
+              <Link to="/itemsalao">Item do Salão Paroquial</Link>
+            </Menu.Item>
+            <Menu.Item key="local" icon={<EnvironmentOutlined />}>
+              <Link to="/local">Local</Link>
+            </Menu.Item>
+            <Menu.Item key="padre" icon={<TeamOutlined />}>
+              <Link to="/padre">Padres</Link>
+            </Menu.Item>
+            <Menu.Item key="paroquiano" icon={<TeamOutlined />}>
+              <Link to="/paroquiano">Paroquianos</Link>
+            </Menu.Item>
+            <Menu.Item key="pastoral" icon={<BarsOutlined />}>
+              <Link to="/pastoral">Pastorais</Link>
+            </Menu.Item>
+            <Menu.Item key="sala" icon={<LogoutOutlined />}>
+              <Link to="/sala">Salas</Link>
+            </Menu.Item>
+            <Menu.Item key="tipoatividade" icon={<UnorderedListOutlined />}>
+              <Link to="/tipoatividade">Tipo Atividade</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.Item key="settings" icon={<LogoutOutlined />}>
+            Configurações
+          </Menu.Item>
+        </Menu>
+      </Sider>
     );
   }
 }

@@ -76,4 +76,45 @@ public class DAOEvento {
         }
     }
 
+    public boolean atualizar(Evento evento) {
+        try {
+            String sql = "UPDATE Evento SET nomeevento = '$1', dataevento = '$2', horainicio = '$3', horafim = '$4', horainiarrumacao = '$5', horafimarrumacao = '$6', dataarrumacao = '$7', telefone = '$8', observacao = '$9', aluguel = $A, foto = '$B' WHERE id = " + evento.getId();
+            sql = sql.replace("$1", evento.getNomeevento());
+            sql = sql.replace("$2", evento.getDataevento().toString());
+            sql = sql.replace("$3", evento.getHorainicio());
+            sql = sql.replace("$4", evento.getHorafim());
+            sql = sql.replace("$5", evento.getHorainiarrumacao());
+            sql = sql.replace("$6", evento.getHorafimarrumacao());
+            sql = sql.replace("$7", evento.getDataarrumacao().toString());
+            sql = sql.replace("$8", evento.getTelefone());
+            sql = sql.replace("$9", evento.getObservacao());
+            sql = sql.replace("$A", Integer.toString(evento.getAluguel().getId()));
+            sql = sql.replace("$B", evento.getFoto());
+
+            SingletonConexao con = SingletonConexao.getConexao();
+            boolean flag = con.manipular(sql);
+
+            return flag;
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar no banco de dados: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean atualizarAluguel(Evento evento) {
+        try {
+            String sql = "UPDATE Evento SET aluguel = $A WHERE id = " + evento.getId();
+            sql = sql.replace("$A", Integer.toString(evento.getAluguel().getId()));
+    
+            SingletonConexao con = SingletonConexao.getConexao();
+            boolean flag = con.manipular(sql);
+    
+            return flag;
+        } catch (Exception e) {
+            System.out.println("Erro ao atualizar o aluguel no banco de dados: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 }

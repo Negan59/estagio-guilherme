@@ -1,6 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MyMenu from './components/Menu';
+import React, { useState } from 'react';
+import { Layout } from 'antd';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // Importe o Router, Route, Routes e Link
+import Sidebar from './components/Menu'; // Importe o seu componente de barra lateral
 import './styles/app.css';
 import Header from './components/Header';
 import Home from './components/Home';
@@ -15,26 +16,37 @@ import Funcionario from './components/Funcionario/Funcionario';
 import Padre from './components/Padre/Padre';
 import ItensSalaoParoquial from './components/ItensSalaoParoquial/ItensSalaoParoquial';
 
+const { Content } = Layout;
+
 function App() {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
+
   return (
     <Router>
-      <div>
-        <MyMenu></MyMenu>
-        <Header></Header>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/aluguel" element={<Aluguel />} />
-          <Route path="/evento" element={<Evento />} />
-          <Route path="/funcionario" element={<Funcionario />} />
-          <Route path="/itemsalao" element={<ItensSalaoParoquial />} />
-          <Route path="/local" element={<Local />} />
-          <Route path="/sala" element={<Sala />} />
-          <Route path='/padre' element={<Padre></Padre>}></Route>
-          <Route path='/paroquiano' element={<Paroquiano></Paroquiano>}></Route>
-          <Route path='/pastoral' element={<Pastoral></Pastoral>}></Route>
-          <Route path='/tipoatividade' element={<TipoAtividade></TipoAtividade>}></Route>
-        </Routes>
-      </div>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Sidebar collapsed={collapsed} />
+        <Layout className="site-layout">
+          <Content style={{ margin: '16px' }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/aluguel" element={<Aluguel />} />
+              <Route path="/evento" element={<Evento />} />
+              <Route path="/funcionario" element={<Funcionario />} />
+              <Route path="/itemsalao" element={<ItensSalaoParoquial />} />
+              <Route path="/local" element={<Local />} />
+              <Route path="/sala" element={<Sala />} />
+              <Route path="/padre" element={<Padre />} />
+              <Route path="/paroquiano" element={<Paroquiano />} />
+              <Route path="/pastoral" element={<Pastoral />} />
+              <Route path="/tipoatividade" element={<TipoAtividade />} />
+            </Routes>
+          </Content>
+        </Layout>
+      </Layout>
     </Router>
   );
 }
