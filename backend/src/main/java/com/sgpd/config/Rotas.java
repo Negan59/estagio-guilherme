@@ -341,5 +341,10 @@ public class Rotas {
         return new ResponseEntity<>(new ChaveController().buscarTodosChave(), HttpStatus.OK);
     }
 
+    @GetMapping("/chave/sala")
+    public ResponseEntity<Object> buscarChavePorSala(@RequestParam("idSala") int id) {
+        return new ResponseEntity<>(new ChaveController().buscarChavePorSala(id), HttpStatus.OK);
+    }
+
 
 }

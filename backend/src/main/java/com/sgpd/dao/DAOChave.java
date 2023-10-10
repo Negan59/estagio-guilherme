@@ -66,4 +66,22 @@ public class DAOChave {
         }
         return listaChaves;
     }
+
+    public ArrayList<Chave> buscarPorSala(int id) {
+        ArrayList<Chave> listaChaves = new ArrayList<>();
+        String sql = "SELECT * FROM chave where Sala_idSala = "+id;
+        SingletonConexao con = SingletonConexao.getConexao();
+        ResultSet rs = con.consultar(sql);
+        try {
+            while (rs.next()) {
+                int idSala = rs.getInt("Sala_idSala");
+                DAOSala dao = new DAOSala();
+                Sala sala = dao.buscarUm(idSala); // Supondo que você tenha um método para buscar uma Sala pelo ID
+                listaChaves.add(new Chave(rs.getInt("idChave"), rs.getString("nome_chave"), sala));
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return listaChaves;
+    }
 }

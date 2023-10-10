@@ -62,6 +62,12 @@ public class Chave {
 
     }
 
+    public ArrayList<Chave> buscarPorSala(int id) {
+        DAOChave dao = new DAOChave();
+        return dao.buscarPorSala(id);
+
+    }
+
     public boolean apagar(int id) {
         DAOChave dao = new DAOChave();
         return dao.apagar(id);

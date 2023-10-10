@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Table, Space, Tag, Tooltip, Row, Col, Card, Modal, Button, Form, Input, Select, message } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Space, Tag, Tooltip, Row, Col, Card, Modal, Button, Form, Select, message } from 'antd';
 import {
   UnlockOutlined,
   ClockCircleOutlined,
@@ -10,32 +10,67 @@ const { Column } = Table;
 const { Option } = Select;
 
 const PainelChave = () => {
-  const [salas, setSalas] = useState([
-    { id: 1, numerosala: 101, descricaosala: 'Sala de Reunião' },
-    { id: 2, numerosala: 102, descricaosala: 'Sala de Treinamento' },
-    // Outras salas fictícias...
-  ]);
-  const [chaves, setChaves] = useState([
-    {
-      id: 1,
-      estado: 'Livre',
-      salaId: 1,
-      paroquiano: 'Paroquiano 1', // Adicione o nome do paroquiano aqui
-      reserva: 'Reserva 1', // Adicione o nome da reserva aqui
-    },
-    {
-      id: 2,
-      estado: 'Aguardando Confirmação',
-      salaId: 2,
-      paroquiano: 'Paroquiano 2',
-      reserva: 'Reserva 2',
-    },
-    // Outras chaves fictícias...
-  ]);
+  const [salas, setSalas] = useState([]); // Estado para armazenar as salas
+  const [chaves, setChaves] = useState([]);
+
+  const [form] = Form.useForm();
   const [selectedSala, setSelectedSala] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [form] = Form.useForm();
+  useEffect(() => {
+    // Função para buscar as salas com fetch
+    const fetchSalas = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/sala'); // Substitua a URL pela sua API de salas
+        const data = await response.json();
+
+        // Adicione o status "Livre" para cada sala
+        const salasComStatusLivre = data.map((sala) => ({
+          ...sala,
+          estado: 'Livre',
+        }));
+
+        setSalas(salasComStatusLivre);
+      } catch (error) {
+        console.error('Erro ao buscar as salas:', error);
+        // Trate o erro de acordo com as necessidades do seu aplicativo
+      }
+    };
+
+    fetchSalas(); // Chame a função para buscar as salas quando o componente for montado
+  }, []);
+
+  useEffect(() => {
+    // Função para buscar as chaves com base no ID da sala selecionada
+    const fetchChaves = async (salaId) => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/chave/sala?idSala=${salaId}`); // Substitua a URL pela sua API de chaves
+        const data = await response.json();
+        console.log(data)
+        setChaves(data);
+      } catch (error) {
+        console.error('Erro ao buscar as chaves:', error);
+        // Trate o erro de acordo com as necessidades do seu aplicativo
+      }
+    };
+
+    if (selectedSala) {
+      fetchChaves(selectedSala.id);
+    }
+  }, [selectedSala]);
+
+  const getStatusIcon = (estado) => {
+    switch (estado) {
+      case 'Livre':
+        return <UnlockOutlined style={{ color: 'green' }} />;
+      case 'Aguardando Confirmação':
+        return <ClockCircleOutlined style={{ color: 'orange' }} />;
+      case 'Ocupado':
+        return <CheckCircleOutlined style={{ color: 'red' }} />;
+      default:
+        return null;
+    }
+  };
 
   const showModal = (sala) => {
     setSelectedSala(sala);
@@ -59,26 +94,14 @@ const PainelChave = () => {
         {salas.map((sala) => (
           <Col key={sala.id} xs={24} sm={12} md={8} lg={6}>
             <Card
-              title={`Sala ${sala.numerosala}`}
+              title={`Sala ${sala.numerosala} - ${sala.descricaosala}`}
               style={{ marginBottom: '16px', cursor: 'pointer' }}
               onClick={() => showModal(sala)}
             >
-              <p><b>Status da Chave:</b> {' '}
-                {chaves.find((chave) => chave.salaId === sala.id)?.estado === 'Livre' && (
-                  <Tag icon={<UnlockOutlined />} color="success">
-                    Livre
-                  </Tag>
-                )}
-                {chaves.find((chave) => chave.salaId === sala.id)?.estado === 'Aguardando Confirmação' && (
-                  <Tag icon={<ClockCircleOutlined />} color="warning">
-                    Aguardando Confirmação
-                  </Tag>
-                )}
-                {chaves.find((chave) => chave.salaId === sala.id)?.estado === 'Ocupado' && (
-                  <Tag icon={<CheckCircleOutlined />} color="error">
-                    Ocupado
-                  </Tag>
-                )}
+              <p>
+                <b>Status da Chave:</b> {' '}
+                <UnlockOutlined style={{ color: 'green' }}></UnlockOutlined>
+                Livre
               </p>
               <p><b>Paroquiano:</b> {chaves.find((chave) => chave.salaId === sala.id)?.paroquiano}</p>
               <p><b>Reserva:</b> {chaves.find((chave) => chave.salaId === sala.id)?.reserva}</p>
@@ -105,10 +128,10 @@ const PainelChave = () => {
           >
             <Select placeholder="Selecione uma chave">
               {chaves
-                .filter((chave) => chave.salaId === selectedSala?.id)
+                .filter((chave) => chave.sala.id === selectedSala?.id)
                 .map((chave) => (
                   <Option key={chave.id} value={chave.id}>
-                    {chave.estado}
+                    {chave.nome}
                   </Option>
                 ))}
             </Select>
