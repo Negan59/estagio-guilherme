@@ -15,6 +15,8 @@ import Evento from './components/Evento/Evento';
 import Funcionario from './components/Funcionario/Funcionario';
 import Padre from './components/Padre/Padre';
 import ItensSalaoParoquial from './components/ItensSalaoParoquial/ItensSalaoParoquial';
+import PainelChave from './components/PainelChave/PainelChave';
+import Chave from './components/Chave/Chave';
 
 const { Content } = Layout;
 
@@ -34,6 +36,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/aluguel" element={<Aluguel />} />
+              <Route path="/chave" element={<Chave />} />
               <Route path="/evento" element={<Evento />} />
               <Route path="/funcionario" element={<Funcionario />} />
               <Route path="/itemsalao" element={<ItensSalaoParoquial />} />
@@ -43,6 +46,7 @@ function App() {
               <Route path="/paroquiano" element={<Paroquiano />} />
               <Route path="/pastoral" element={<Pastoral />} />
               <Route path="/tipoatividade" element={<TipoAtividade />} />
+              <Route path="/painelchave" element={<PainelChave />} />
             </Routes>
           </Content>
         </Layout>

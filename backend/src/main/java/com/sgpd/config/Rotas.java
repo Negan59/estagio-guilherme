@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.sgpd.control.AgendaController;
 import com.sgpd.control.AluguelController;
 import com.sgpd.control.AtividadeController;
+import com.sgpd.control.ChaveController;
 import com.sgpd.control.FuncionarioController;
 import com.sgpd.control.ItensSalaoParoquialController;
 import com.sgpd.control.PadreController;
@@ -14,6 +15,7 @@ import com.sgpd.control.ParoquianoController;
 import com.sgpd.control.PastoralController;
 import com.sgpd.control.TipoAtividadeController;
 import com.sgpd.model.Aluguel;
+import com.sgpd.model.Chave;
 import com.sgpd.model.Erro;
 import com.sgpd.model.Funcionario;
 import com.sgpd.model.ItensSalaoParoquial;
@@ -311,6 +313,32 @@ public class Rotas {
     @GetMapping("/aluguel")
     public ResponseEntity<Object> buscarTodosAluguel() {
         return new ResponseEntity<>(new AluguelController().buscarTodos(), HttpStatus.OK);
+    }
+
+    // chave
+    @PostMapping("/chave")
+    public ResponseEntity<Erro> inserirChave(@RequestBody Chave u) {
+        return new ResponseEntity<>(new ChaveController().salvarChave(u), HttpStatus.OK);
+    }
+
+    @PutMapping("/chave")
+    public ResponseEntity<Erro> alterarChave(@RequestBody Chave u) {
+        return new ResponseEntity<>(new ChaveController().alterarChave(u), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/chave/{id}")
+    public ResponseEntity<Erro> apagarChave(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<>(new ChaveController().apagarChave(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/chave/{id}")
+    public ResponseEntity<Chave> buscarUmChave(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<Chave>(new ChaveController().buscarUmChave(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/chave")
+    public ResponseEntity<Object> buscarTodosChave() {
+        return new ResponseEntity<>(new ChaveController().buscarTodosChave(), HttpStatus.OK);
     }
 
 

@@ -10,6 +10,7 @@ import {
   LogoutOutlined,
   BarsOutlined,
   UnorderedListOutlined,
+  KeyOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -57,6 +58,9 @@ class MyMenu extends React.Component {
             <Menu.Item key="aluguel" icon={<CalendarOutlined />}>
               <Link to="/aluguel">Aluguel</Link>
             </Menu.Item>
+            <Menu.Item key="chave" icon={<KeyOutlined />}>
+              <Link to="/chave">Chave</Link>
+            </Menu.Item>
             <Menu.Item key="evento" icon={<CalendarOutlined />}>
               <Link to="/evento">Evento</Link>
             </Menu.Item>
@@ -83,6 +87,18 @@ class MyMenu extends React.Component {
             </Menu.Item>
             <Menu.Item key="tipoatividade" icon={<UnorderedListOutlined />}>
               <Link to="/tipoatividade">Tipo Atividade</Link>
+            </Menu.Item>
+          </Menu.SubMenu>
+          <Menu.SubMenu
+            key="gerenciarsalas"
+            title="Gerenciar Salas"
+            icon={<PlusSquareOutlined />}
+          >
+          <Menu.Item key="painelchave" icon={<KeyOutlined />}>
+              <Link to="/painelchave">Chave</Link>
+            </Menu.Item>
+            <Menu.Item key="reservar" icon={<CalendarOutlined />}>
+              <Link to="/reservarsala">Reservar Sala</Link>
             </Menu.Item>
           </Menu.SubMenu>
           <Menu.Item key="settings" icon={<LogoutOutlined />}>
